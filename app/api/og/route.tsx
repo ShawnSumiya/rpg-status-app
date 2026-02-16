@@ -1,6 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import type { NextRequest } from "next/server";
 import { CHARACTER_IMAGES } from "@/lib/characters";
+import { AI_CONFIG } from "@/config/site.config";
 
 export const runtime = "edge";
 
@@ -168,11 +169,11 @@ export async function GET(req: NextRequest) {
                 STATUS
               </div>
               {[
-                ["STR / 自己主張力", stats.str],
-                ["VIT / メンタル耐久", stats.vit],
-                ["INT / 悪知恵", stats.int],
-                ["AGI / 逃げ足", stats.agi],
-                ["LUK / 異性運", stats.luk]
+                [AI_CONFIG.statusLabels.str, stats.str],
+                [AI_CONFIG.statusLabels.vit, stats.vit],
+                [AI_CONFIG.statusLabels.int, stats.int],
+                [AI_CONFIG.statusLabels.agi, stats.agi],
+                [AI_CONFIG.statusLabels.luk, stats.luk]
               ].map(([label, value]) => (
                 <div
                   key={label as string}

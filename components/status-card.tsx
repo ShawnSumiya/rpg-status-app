@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import type { DiagnosisResult } from "@/lib/types";
 import { CHARACTER_IMAGES } from "@/lib/characters";
+import { AI_CONFIG, SITE_CONFIG } from "@/config/site.config";
 import {
   ShieldHalf,
   Swords,
@@ -75,7 +76,11 @@ export function StatusCard({ result }: StatusCardProps) {
     characterId: safeCharacterId
   }).toString();
 
-  const shareText = `私のRPG性格タイプは...【${className}】\nLv.${level} / 武器: ${passiveSkill.name} / 弱点: ${unequipableItem.name}\n\n#RPG性格診断`;
+  const twitterMention =
+    SITE_CONFIG.twitterAccount && SITE_CONFIG.twitterAccount.trim()
+      ? ` ${SITE_CONFIG.twitterAccount}`
+      : "";
+  const shareText = `私のRPG性格タイプは...【${className}】\nLv.${level} / 武器: ${passiveSkill.name} / 弱点: ${unequipableItem.name}\n\n${SITE_CONFIG.shareHashtag}${twitterMention}`;
   const shareUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}?${new URLSearchParams({
@@ -147,23 +152,27 @@ export function StatusCard({ result }: StatusCardProps) {
             <dl className="grid grid-cols-2 gap-3 text-xs md:text-sm">
               <StatusRow
                 icon={Swords}
-                label="STR / 自己主張力"
+                label={AI_CONFIG.statusLabels.str}
                 value={stats.str}
               />
               <StatusRow
                 icon={ShieldHalf}
-                label="VIT / メンタル耐久"
+                label={AI_CONFIG.statusLabels.vit}
                 value={stats.vit}
               />
               <StatusRow
                 icon={Brain}
-                label="INT / 悪知恵"
+                label={AI_CONFIG.statusLabels.int}
                 value={stats.int}
               />
-              <StatusRow icon={Zap} label="AGI / 逃げ足" value={stats.agi} />
+              <StatusRow
+                icon={Zap}
+                label={AI_CONFIG.statusLabels.agi}
+                value={stats.agi}
+              />
               <StatusRow
                 icon={Clover}
-                label="LUK / 異性運"
+                label={AI_CONFIG.statusLabels.luk}
                 value={stats.luk}
               />
             </dl>
@@ -215,11 +224,11 @@ export function StatusCard({ result }: StatusCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={
-                !xShareLink
+                  !xShareLink
                   ? (e) => {
                       e.preventDefault();
                       if (typeof window !== "undefined") {
-                        const s = `私のRPG性格タイプは...【${className}】\nLv.${level} / 武器: ${passiveSkill.name} / 弱点: ${unequipableItem.name}\n\n#RPG性格診断`;
+                        const s = `私のRPG性格タイプは...【${className}】\nLv.${level} / 武器: ${passiveSkill.name} / 弱点: ${unequipableItem.name}\n\n${SITE_CONFIG.shareHashtag}${twitterMention}`;
                         const u = `${window.location.origin}?${new URLSearchParams({
                           level: level.toString(),
                           str: stats.str.toString(),

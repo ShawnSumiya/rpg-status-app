@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from "@/config/site.config";
+
 export type QuestionCategory = "origins" | "adventure" | "abyss";
 
 export type Question = {
@@ -498,9 +500,10 @@ export const QUESTION_STAGES: QuestionStage[] = [
 ];
 /**
  * 1回の診断で回答してもらう質問数。
+ * config/site.config.ts の SITE_CONFIG.maxQuestions から取得。
  * 実際には questionsPool のプールから、この数だけランダム抽選して使用する。
  */
-export const TOTAL_QUESTION_COUNT = 20;
+export const TOTAL_QUESTION_COUNT = SITE_CONFIG.maxQuestions;
 
 export function getStageByCategory(
   category: QuestionCategory

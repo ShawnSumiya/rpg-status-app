@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DiagnosisForm } from "@/components/diagnosis-form";
 import { StatusCard } from "@/components/status-card";
 import type { DiagnosisResult } from "@/lib/types";
+import { SITE_CONFIG } from "@/config/site.config";
 import { Sparkles } from "lucide-react";
 
 /**
@@ -31,17 +32,20 @@ export default function HomePage() {
           <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-amber-300/70 bg-black/60">
             <Sparkles className="h-3 w-3 text-amber-200" />
           </span>
-          PERSONALITY RPG CARD MAKER
+          {SITE_CONFIG.hero.sublabel}
         </p>
         <h1 className="hero-title text-3xl md:text-4xl lg:text-5xl rpg-gradient-text">
-          あなたの性格、、、
+          {SITE_CONFIG.hero.titleLine1}
           <br />
-          RPGステータス化します。
+          {SITE_CONFIG.hero.titleLine2}
         </h1>
         <p className="hero-subtitle text-xs md:text-sm text-slate-200/90 leading-relaxed">
-          いくつかの質問に答えるだけで、性格をRPGキャラカードに変換。
-          <br />
-          メンタルHPから相性最悪な相手まで、すべて数値とスキルで可視化します。
+          {SITE_CONFIG.hero.subtitle.split("\n").map((line, i) => (
+            <span key={i}>
+              {i > 0 && <br />}
+              {line}
+            </span>
+          ))}
         </p>
       </section>
 

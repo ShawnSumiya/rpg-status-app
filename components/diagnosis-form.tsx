@@ -12,6 +12,7 @@ import {
   getStageByCategory,
   type Question
 } from "@/lib/questions";
+import { SITE_CONFIG } from "@/config/site.config";
 
 /** フォームバリデーションスキーマ（20問すべての回答が必須・400文字以内） */
 const formSchema = z.object({
@@ -197,17 +198,15 @@ export function DiagnosisForm({ onDiagnosed }: DiagnosisFormProps) {
         <div>
           <p className="rpg-label">RPG PERSONALITY TEST</p>
           <h1 className="mt-1 text-2xl md:text-3xl rpg-gradient-text">
-            冒険の書・性格ステータス診断
+            {SITE_CONFIG.diagnosisForm.title}
           </h1>
           <p className="mt-2 text-xs md:text-sm text-slate-300/80 leading-relaxed">
-            全
-            <span className="text-amber-300 font-semibold">
-              {" "}
-              {TOTAL_QUESTION_COUNT}問・3ステージ構成
-            </span>
-            のRPG風性格診断です。
+            {SITE_CONFIG.diagnosisForm.description.replace(
+              "{count}",
+              String(TOTAL_QUESTION_COUNT)
+            )}
             <br className="hidden md:inline" />
-            心理学に基づいたアルゴリズムが、あなたの深層心理を解析します。
+            {SITE_CONFIG.diagnosisForm.descriptionSub}
           </p>
         </div>
         <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-full border border-amber-300/60 bg-black/40 shadow-rpg-glow">
