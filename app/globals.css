@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-background text-foreground font-gothic;
+  background-image:
+    radial-gradient(circle at top left, rgba(147, 51, 234, 0.45), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(234, 179, 8, 0.4), transparent 55%),
+    theme("backgroundImage.rpg-grid");
+  background-size: auto, auto, 32px 32px;
+}
+
+.rpg-panel {
+  @apply border border-border bg-card/95 shadow-rpg-glow rounded-xl;
+}
+
+.rpg-gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(120deg, #facc15, #e879f9, #a855f7);
+}
+
+.rpg-label {
+  @apply text-xs uppercase tracking-[0.25em] text-slate-300/80;
+}
+
+.rpg-input {
+  @apply w-full rounded-md border border-border bg-black/40 px-3 py-2 text-sm text-foreground
+    shadow-inner shadow-slate-900/60 outline-none
+    focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black
+    placeholder:text-slate-500;
+}
+
+.rpg-button-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-amber-400/80
+    bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500
+    px-4 py-2 text-sm font-semibold text-black shadow-[0_0_24px_rgba(250,204,21,0.6)]
+    transition-all duration-150 ease-out
+    hover:brightness-110 hover:shadow-[0_0_40px_rgba(250,204,21,0.9)]
+    active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.rpg-button-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-border/60
+    bg-black/40 px-4 py-2 text-xs font-medium text-slate-200
+    hover:bg-purple-900/40 hover:text-amber-200 transition-colors;
+}
+
+.question-card-slide {
+  animation: question-card-slide-in 220ms ease-out;
+}
+
+@keyframes question-card-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 260ms ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RPG風EXPバー型ローディング（ドット絵フォント・ネオングラデーション） */
+.loading-bar-container {
+  min-width: 280px;
+  font-family: var(--font-dotgothic16), "DotGothic16", system-ui, sans-serif;
+}
+
+.loading-bar-label {
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fef08a;
+  text-shadow: 0 0 8px rgba(254, 240, 138, 0.6);
+  letter-spacing: 0.15em;
+}
+
+.loading-bar-track {
+  width: 100%;
+  height: 14px;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: 2px;
+  background-color: rgba(15, 10, 30, 0.95);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  border-radius: 0;
+  background: linear-gradient(
+    90deg,
+    #a855f7 0%,
+    #c084fc 35%,
+    #22d3ee 70%,
+    #06b6d4 100%
+  );
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+  transition: width 0.12s ease-out;
+}
+
