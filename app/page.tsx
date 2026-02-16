@@ -6,6 +6,11 @@ import { StatusCard } from "@/components/status-card";
 import type { DiagnosisResult } from "@/lib/types";
 import { Sparkles } from "lucide-react";
 
+/**
+ * トップページ
+ * ランディングヘッダー・診断フォーム・診断結果カードを表示する。
+ * 診断結果が表示された際は自動的にトップへスクロールする。
+ */
 export default function HomePage() {
   const [result, setResult] = useState<DiagnosisResult | null>(null);
 

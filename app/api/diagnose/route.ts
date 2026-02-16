@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { diagnosisRequestSchema } from "@/lib/validation";
 import type { DiagnosisRequest } from "@/lib/types";
 import { generateDiagnosis } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 
+/**
+ * 診断APIエンドポイント
+ * 質問・回答のペアを受け取り、Gemini AI による性格診断を実行してRPGステータス形式で返す。
+ * @see lib/gemini.ts - 診断ロジックの本体。プロンプトや出力形式を変更したい場合はこちらを編集。
+ */
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
@@ -17,12 +23,11 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("[API] /api/diagnose error", error);
 
-    // Zod バリデーションエラー
-    if (error instanceof Error && "issues" in (error as any)) {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         {
           error: "入力値が不正です。",
-          details: (error as any).issues
+          details: error.issues
         },
         { status: 400 }
       );

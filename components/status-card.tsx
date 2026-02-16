@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { DiagnosisResult } from "@/lib/types";
 import { CHARACTER_IMAGES } from "@/lib/characters";
 import {
@@ -22,6 +23,12 @@ type StatusCardProps = {
 
 const VALID_CHARACTER_IDS = new Set(CHARACTER_IMAGES.map((c) => c.id));
 
+/**
+ * 診断結果をRPGキャラカード形式で表示するコンポーネント
+ * ステータス、スキル、呪いアイテム、冒険の書（詳細レポート）を表示し、
+ * X（Twitter）シェア・OG画像生成リンクを提供する。
+ * @param result - 診断APIから返却された診断結果
+ */
 export function StatusCard({ result }: StatusCardProps) {
   const {
     characterId,
@@ -37,19 +44,20 @@ export function StatusCard({ result }: StatusCardProps) {
   const safeCharacterId =
     characterId && VALID_CHARACTER_IDS.has(characterId) ? characterId : "hero";
 
-  const MarkdownWithComponents: any = ReactMarkdown;
-
+  /** 冒険の書セクション用の Markdown カスタムコンポーネント（スタイル適用） */
   const adventureMarkdownComponents = {
-    p: ({ children }: any) => (
+    p: ({ children }: { children?: ReactNode }) => (
       <p className="mb-4 leading-loose text-gray-200">{children}</p>
     ),
-    ul: ({ children }: any) => (
+    ul: ({ children }: { children?: ReactNode }) => (
       <ul className="mb-4 list-disc list-inside space-y-2 pl-4 leading-loose text-gray-200">
         {children}
       </ul>
     ),
-    li: ({ children }: any) => <li className="my-1">{children}</li>,
-    strong: ({ children }: any) => (
+    li: ({ children }: { children?: ReactNode }) => (
+      <li className="my-1">{children}</li>
+    ),
+    strong: ({ children }: { children?: ReactNode }) => (
       <strong className="text-yellow-400 font-semibold">{children}</strong>
     )
   };
@@ -277,9 +285,9 @@ export function StatusCard({ result }: StatusCardProps) {
               </p>
             </div>
             <div>
-              <MarkdownWithComponents components={adventureMarkdownComponents}>
+              <ReactMarkdown components={adventureMarkdownComponents}>
                 {analysis.strategy}
-              </MarkdownWithComponents>
+              </ReactMarkdown>
             </div>
           </div>
 
@@ -292,9 +300,9 @@ export function StatusCard({ result }: StatusCardProps) {
               </p>
             </div>
             <div>
-              <MarkdownWithComponents components={adventureMarkdownComponents}>
+              <ReactMarkdown components={adventureMarkdownComponents}>
                 {analysis.weakness}
-              </MarkdownWithComponents>
+              </ReactMarkdown>
             </div>
           </div>
 
@@ -307,9 +315,9 @@ export function StatusCard({ result }: StatusCardProps) {
               </p>
             </div>
             <div>
-              <MarkdownWithComponents components={adventureMarkdownComponents}>
+              <ReactMarkdown components={adventureMarkdownComponents}>
                 {analysis.bestPartner ?? analysis.match}
-              </MarkdownWithComponents>
+              </ReactMarkdown>
             </div>
           </div>
         </div>
@@ -324,6 +332,10 @@ type StatusRowProps = {
   value: number;
 };
 
+/**
+ * ステータス1行を表示する内部コンポーネント（STR/VIT/INT/AGI/LUK）
+ * 0〜100の値をプログレスバーと数値で表示する。
+ */
 function StatusRow({ icon: Icon, label, value }: StatusRowProps) {
   const clamped = Math.max(0, Math.min(100, value));
   const percent = `${clamped}%`;

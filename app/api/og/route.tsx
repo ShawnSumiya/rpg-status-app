@@ -6,6 +6,13 @@ export const runtime = "edge";
 
 const VALID_CHARACTER_IDS = new Set(CHARACTER_IMAGES.map((c) => c.id));
 
+/**
+ * OGP用画像生成エンドポイント
+ * クエリパラメータ（className, level, stats, passiveName, unequipableName, characterId）を受け取り、
+ * 1200×630px のRPG風ステータスカード画像を返す。
+ * SNSシェア時のプレビュー画像として使用される。
+ * @see lib/characters.ts - キャラクター画像の追加・変更は characters を編集。
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 

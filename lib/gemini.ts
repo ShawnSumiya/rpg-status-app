@@ -10,20 +10,6 @@ const rawGeminiEnv = {
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
 };
 
-// デバッグ用に、関連する環境変数だけログ出力（API キーの中身は出さない）
-if (process.env.NODE_ENV !== "production") {
-  const googleEnvKeys = Object.keys(process.env).filter((key) =>
-    key.includes("GOOGLE")
-  );
-  console.log("[Gemini] debug env keys", googleEnvKeys);
-  console.log("[Gemini] debug gemini env", {
-    GOOGLE_GENERATIVE_AI_API_KEY: rawGeminiEnv.GOOGLE_GENERATIVE_AI_API_KEY
-      ? "(set)"
-      : "(missing)",
-    GOOGLE_API_KEY: rawGeminiEnv.GOOGLE_API_KEY ? "(set)" : "(missing)"
-  });
-}
-
 const apiKey =
   rawGeminiEnv.GOOGLE_GENERATIVE_AI_API_KEY ?? rawGeminiEnv.GOOGLE_API_KEY;
 
@@ -50,6 +36,14 @@ function getClient(): GoogleGenAI {
   return client;
 }
 
+/**
+ * 診断のメイン処理：Gemini AI に質問・回答を送り、RPGステータス形式のJSONを生成する。
+ *
+ * 【カスタマイズのポイント】
+ * - systemPrompt（51〜150行付近）: ここを編集すると診断のトーン・毒舌度・出力フォーマットが変わる。
+ * - model: "gemini-2.5-flash" を別モデルに変更可能。速度と品質のトレードオフを調整できる。
+ * - selectCharacterId: 診断結果に合うキャラクター画像を選択。lib/characters.ts のキャラ一覧と連動。
+ */
 export async function generateDiagnosis(
   payload: DiagnosisRequest
 ): Promise<DiagnosisResult> {

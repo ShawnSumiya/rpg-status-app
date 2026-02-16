@@ -13,6 +13,7 @@ import {
   type Question
 } from "@/lib/questions";
 
+/** フォームバリデーションスキーマ（20問すべての回答が必須・400文字以内） */
 const formSchema = z.object({
   answers: z
     .array(
@@ -30,8 +31,15 @@ type DiagnosisFormProps = {
   onDiagnosed: (result: DiagnosisResult) => void;
 };
 
+/** ローディングバーの更新間隔（ミリ秒） */
 const LOADING_BAR_INTERVAL_MS = 100;
 
+/**
+ * 診断フォームコンポーネント
+ * 紙芝居形式で1問ずつ表示し、全20問回答後に診断APIを呼び出す。
+ * 質問の抽選ロジックは lib/questions.ts の getRandomQuestions に依存。
+ * @see lib/questions.ts - 質問の追加・変更・カテゴリ編集を行う場合はこちらを編集。
+ */
 export function DiagnosisForm({ onDiagnosed }: DiagnosisFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPercent, setLoadingPercent] = useState(0);
