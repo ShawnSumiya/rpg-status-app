@@ -46,6 +46,54 @@
 | `components/diagnosis-form.tsx` | React Hook Form + Zod による診断フォーム。 |
 | `components/status-card.tsx` | 診断結果を RPG ステータス風 UI で表示するカード。 |
 
+## 🛠 アプリのカスタマイズ方法（プログラミング不要）
+
+本アプリは、設定ファイル **`config/site.config.ts`** を編集するだけで、
+アプリ名、AIの性格、ステータス項目などを自由に変更できます。
+
+### 1. 設定ファイルを開く
+フォルダ内の `config/site.config.ts` をテキストエディタ（VSCodeやメモ帳など）で開きます。
+
+### 2. 各項目を編集する
+
+#### 🅰️ アプリ名・説明文の変更
+`siteInfo` の部分を書き換えると、ブラウザのタブ名やSNSシェア時の文章が変わります。
+
+```typescript
+siteInfo: {
+  title: "あなたのアプリ名", 
+  description: "アプリの説明文...",
+  // ...
+},
+```
+
+#### 🅱️ ステータス項目（パラメータ）の変更
+`statusLabels` の部分を書き換えると、診断結果のグラフや画像の項目名が変わります。
+※ `str` や `vit` などの左側のキー（英語部分）は変更しないでください。
+
+```typescript
+statusLabels: {
+  str: "営業力",    // 元: STR / 自己主張力
+  vit: "忍耐力",    // 元: VIT / メンタル耐久
+  int: "企画力",    // 元: INT / 悪知恵
+  agi: "行動力",    // 元: AGI / 逃げ足
+  luk: "愛嬌",      // 元: LUK / 異性運
+},
+```
+
+#### 🅾️ AIの性格（診断内容）の変更
+`aiConfig.persona` の文章を変更することで、AIの口調やキャラ設定が変わります。
+「辛口で」「優しく」「戦国武将風に」など、自由に指示を書き込んでください。
+
+```typescript
+aiConfig: {
+  persona: `
+    あなたはここを自由に書き換えてください。
+    例：あなたは熱血テニスコーチです。「〜だ！」という口調で話してください。
+  `,
+},
+```
+
 ## 🛠 技術スタック
 
 - **Framework**: Next.js 16 (App Router, TypeScript)

@@ -3,90 +3,32 @@
  *
  * 購入者がこのファイルを編集するだけで、
  * アプリ名・説明・URL・SNS設定・診断の性格などをカスタマイズできます。
+ *
+ * 一元管理用のエントリは siteConfig（siteInfo / statusLabels / aiConfig）です。
+ * SITE_CONFIG と AI_CONFIG はここから導出され、既存コードとの互換用に export しています。
  */
 
-/** アプリの基本情報 */
-export const SITE_CONFIG = {
-  /**
-   * アプリのタイトル
-   * - ブラウザタブや SEO メタタグに使用されます
-   */
-  title: "RPG性格ステータス診断 - 冒険の書メーカー",
-
-  /**
-   * アプリの説明文
-   * - SEO・OGP の description に使用されます
-   */
-  description:
-    "Gemini があなたの性格を辛口RPGステータスに変換する診断アプリ。メンタルHPから相性最悪な相手まで丸わかり。",
-
-  /**
-   * デプロイ後のURL
-   * - OGP画像の絶対URLや、リンクカード表示に使用されます
-   * - 本番環境のURLに置き換えてください（例: https://your-app.vercel.app）
-   */
-  url: "https://your-app-url.vercel.app",
-
-  /**
-   * X（Twitter）シェア時にメンションを付けたいアカウント
-   * - 例: "@your_account"
-   * - 空文字の場合はメンションなし
-   */
-  twitterAccount: "@your_account",
-
-  /**
-   * 診断の質問数（表示用）
-   * - フロントエンドの「全〇問」表示や、実際の抽選数に使用されます
-   * - lib/questions.ts の質問プールより小さくする必要があります
-   */
-  maxQuestions: 20,
-
-  /**
-   * トップページのヒーローセクション用テキスト
-   */
-  hero: {
-    /** サブタイトル（小さく表示される英語テキスト） */
-    sublabel: "PERSONALITY RPG CARD MAKER",
-    /** メインタイトル（2行で表示） */
-    titleLine1: "あなたの性格、、、",
-    titleLine2: "RPGステータス化します。",
-    /** 説明文 */
-    subtitle:
-      "いくつかの質問に答えるだけで、性格をRPGキャラカードに変換。\nメンタルHPから相性最悪な相手まで、すべて数値とスキルで可視化します。"
+/** アプリ情報・ステータスラベル・AIプロンプトの一元管理用 */
+export const siteConfig = {
+  /** layout.tsx 等で使用するアプリの基本情報 */
+  siteInfo: {
+    title: "RPG性格ステータス診断 - 冒険の書メーカー",
+    description:
+      "Gemini があなたの性格を辛口RPGステータスに変換する診断アプリ。メンタルHPから相性最悪な相手まで丸わかり。"
   },
 
-  /**
-   * 診断フォームの表示用テキスト
-   */
-  diagnosisForm: {
-    /** フォームタイトル */
-    title: "冒険の書・性格ステータス診断",
-    /** フォームの説明文（{count} が質問数に置き換わります） */
-    description: "全{count}問・3ステージ構成のRPG風性格診断です。",
-    /** フォーム説明の補足 */
-    descriptionSub: "心理学に基づいたアルゴリズムが、あなたの深層心理を解析します。"
-  },
+  /** StatusCard / OG画像 等で使用するステータス表示ラベル */
+  statusLabels: {
+    str: "STR / 自己主張力",
+    vit: "VIT / メンタル耐久",
+    int: "INT / 悪知恵",
+    agi: "AGI / 逃げ足",
+    luk: "LUK / 異性運"
+  } as const,
 
-  /**
-   * シェア用ハッシュタグ
-   */
-  shareHashtag: "#RPG性格診断"
-} as const;
-
-/** AI（診断）の設定 */
-export const AI_CONFIG = {
-  /**
-   * 使用する Gemini モデル名
-   * - 速度と品質のトレードオフで変更可能（例: gemini-2.5-flash, gemini-2.0-flash）
-   */
-  model: "gemini-2.5-flash",
-
-  /**
-   * AIの性格設定（システムプロンプト）
-   * - ここを編集すると、占い師・ナレーターのトーンが変わります
-   * - 「毒舌」→「優しい」に変えると、診断結果の辛口度が変わります
-   */
-  systemPrompt: `あなたは毒舌だが愛のあるRPGナレーターです。
+  /** api/diagnose → lib/gemini で使用するシステムプロンプト全文 */
+  aiConfig: {
+    persona: `あなたは毒舌だが愛のあるRPGナレーターです。
 ユーザーのRPG的な行動選択から、現実世界の性格、とくに『欠点』や『恋愛傾向（こじらせポイント含む）』を深読みしてください。
 ユーザーの性格をRPGキャラクターのステータス画面として表現します。
 ただし相手を本気で傷つけないよう、ユーモアと自虐ネタレベルの表現にとどめてください。
@@ -156,17 +98,35 @@ Origins では幼少期や本能的リアクション、Adventure では仕事�
     "match": "どんな性格・立場・ロールの人がパーティメンバーとして最適かを、具体的な人物像や職業名を挙げながら説明してください。",
     "bestPartner": "あなたの欠点を補い、一緒にいると人生RPGの難易度が下がる『最高の相棒』像について、Markdown の箇条書きリスト3つのみで、各行を「- **【キャッチフレーズ付きの役割名】**: その相手がなぜ必要なのか・どんな場面でどう助けになるのか」という形式で具体的に記述してください。前置きや後書きの長文は不要です。"
   }
-}`,
+}`
+  }
+} as const;
 
-  /**
-   * ステータス表示用ラベル（STR, VIT, INT, AGI, LUK）
-   * - 診断結果カードやOG画像に表示されます
-   */
-  statusLabels: {
-    str: "STR / 自己主張力",
-    vit: "VIT / メンタル耐久",
-    int: "INT / 悪知恵",
-    agi: "AGI / 逃げ足",
-    luk: "LUK / 異性運"
-  } as const
-};
+/** アプリの基本情報（siteConfig.siteInfo とその他UI用をまとめた互換用） */
+export const SITE_CONFIG = {
+  title: siteConfig.siteInfo.title,
+  description: siteConfig.siteInfo.description,
+  url: "https://your-app-url.vercel.app",
+  twitterAccount: "@your_account",
+  maxQuestions: 20,
+  hero: {
+    sublabel: "PERSONALITY RPG CARD MAKER",
+    titleLine1: "あなたの性格、、、",
+    titleLine2: "RPGステータス化します。",
+    subtitle:
+      "いくつかの質問に答えるだけで、性格をRPGキャラカードに変換。\nメンタルHPから相性最悪な相手まで、すべて数値とスキルで可視化します。"
+  },
+  diagnosisForm: {
+    title: "冒険の書・性格ステータス診断",
+    description: "全{count}問・3ステージ構成のRPG風性格診断です。",
+    descriptionSub: "心理学に基づいたアルゴリズムが、あなたの深層心理を解析します。"
+  },
+  shareHashtag: "#RPG性格診断"
+} as const;
+
+/** AI（診断）の設定（siteConfig.aiConfig / statusLabels の互換用） */
+export const AI_CONFIG = {
+  model: "gemini-2.5-flash",
+  systemPrompt: siteConfig.aiConfig.persona,
+  statusLabels: siteConfig.statusLabels
+} as const;
